@@ -1,8 +1,6 @@
 coursera-algorithms-p1
 ======================
 
-Exercises
+```rake``` command for running specs
 
-Run ```rake``` command for running specs
-
-Run ```./bin/union``` for playing around
+```./bin/union``` for playing around
