@@ -1,0 +1,39 @@
+#!/bin/env ruby
+$:.unshift File.expand_path('../../lib', __FILE__)
+require 'highline/import'
+require 'union'
+
+def ask_two_integers
+  ints = ask "Enter two integers, separated by comma" do |q| q.validate = /\d+,\d+/ end
+  ints.split(',').map(&:strip).map(&:to_i)
+end
+
+def start(klass)
+  size = ask "Enter size of collection", Integer
+  qf = klass.new(size)
+  loop do
+    choose do |menu|
+      menu.prompt = "Choose command"
+      menu.choice "Print" do
+        say qf.collection.join(" ")
+      end
+      menu.choice "Union" do
+        qf.union(*ask_two_integers)
+      end
+      menu.choice "Connected?" do
+        say qf.connected?(*ask_two_integers).to_s
+      end
+      menu.choice "Exit" do
+        say "Bye"
+        exit
+      end
+    end
+  end
+end
+
+choose do |menu|
+  menu.prompt = "Choose union algorithm"
+  menu.choice "quick-find" do
+    start(QuickFind)
+  end
+end
