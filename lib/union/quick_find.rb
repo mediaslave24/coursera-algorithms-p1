@@ -1,5 +1,3 @@
-require 'union'
-
 class QuickFind < Union
   def union(p, q)
     a, b = @collection[p], @collection[q]
