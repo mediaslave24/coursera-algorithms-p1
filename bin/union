@@ -2,10 +2,15 @@
 $:.unshift File.expand_path('../../lib', __FILE__)
 require 'highline/import'
 require 'union'
+require 'pry'
 
 def ask_two_integers
   ints = ask "Enter two integers, separated by comma" do |q| q.validate = /\d+,\d+/ end
   ints.split(',').map(&:strip).map(&:to_i)
+end
+
+def ask_one_integer
+  ask "Enter one integer", Integer
 end
 
 def start(klass)
@@ -14,15 +19,27 @@ def start(klass)
   loop do
     choose do |menu|
       menu.prompt = "Choose command"
+
       menu.choice "Print" do
         say qf.collection.join(" ")
       end
+
       menu.choice "Union" do
         qf.union(*ask_two_integers)
       end
+
       menu.choice "Connected?" do
         say qf.connected?(*ask_two_integers).to_s
       end
+
+      menu.choice "Root" do
+        say qf.root(ask_one_integer).to_s
+      end if qf.respond_to?(:root)
+
+      menu.choice "Run console in #{qf.class.name} instance context" do
+        qf.pry
+      end
+
       menu.choice "Exit" do
         say "Bye"
         exit
@@ -33,7 +50,8 @@ end
 
 choose do |menu|
   menu.prompt = "Choose union algorithm"
-  menu.choice "quick-find" do
-    start(QuickFind)
-  end
+  menu.choice "quick-find" do start(QuickFind) end
+  menu.choice "quick-union" do start(QuickUnion) end
+  menu.choice "weighted quick-union" do start(WeightedQuickUnion) end
+  menu.choice "weighted quick-union with path compression" do start(WeightedQuickUnion) end
 end
