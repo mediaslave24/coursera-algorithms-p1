@@ -1,7 +1,8 @@
 class QuickUnion < Union
   def union(p, q)
-    p_root = root(@collection[p])
-    q_root = root(@collection[q])
+    p_root = root(p)
+    q_root = root(q)
+    return if p_root == q_root
     @collection[p_root] = q_root
   end
 
